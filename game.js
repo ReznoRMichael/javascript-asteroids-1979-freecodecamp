@@ -9,8 +9,11 @@ const ROIDS_SPEED = 50; // max starting speed of asteroids in pixels per second
 const ROIDS_VERT = 10; // average number of vertices on each asteroids
 const SHIP_SIZE = 30; // ship height in pixels
 const SHIP_THRUST = 5; // acceleration of the ship in pixels per second
+const SHIP_EXPLODE_DURATION = 0.3; // duration of the ship's explosion
 const TURN_SPEED = 360; // turn speed in degrees per second
 const TURN_SPEED_RAD = TURN_SPEED / 180 * Math.PI / FPS; // turn speed converted to radians per second
+const SHOW_BOUNDING = false; // show the collision detection bounding
+const SHOW_CENTRE_DOT = false; // show the red dot in the center of the ship
 
 /** @type {HTMLCanvasElement} */
 var canv = document.getElementById("gameCanvas");
@@ -26,6 +29,7 @@ var ship = {
     // direction of the ship - angle
     // 90 - face up
     a: 90 / 180 * Math.PI, // convert to radians
+    explodeTime: 0,
     rot: 0, // ship rotation (start = no rotation)
     thrusting: false, // toggle thrusting
     thrust: {
@@ -65,6 +69,17 @@ function createAsteroidBelt() {
 function distanceBetweenPoints(x1, y1, x2, y2)
 {
     return Math.sqrt( Math.pow(x2 - x1, 2) + Math.pow( y2 - y1, 2) );
+}
+
+function explodeShip()
+{
+    ship.explodeTime = Math.ceil( SHIP_EXPLODE_DURATION * FPS );
+    ctx.fillStyle = "lime";
+    ctx.strokeStyle = "lime";
+    ctx.beginPath();
+    ctx.arc( ship.x, ship.y, ship.r, 0, Math.PI * 2, false ); // circle
+    ctx.fill();
+    ctx.stroke();
 }
 
 function keyDown(/** @type {KeyboardEvent} */ ev ) {
@@ -122,7 +137,10 @@ function newAsteroid(x, y) {
     return roid;
 }
 
-function update() {
+function update()
+{
+    var exploding = ship.explodeTime > 0;
+
     // draw background (space)
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height);
@@ -161,34 +179,66 @@ function update() {
     }
 
     // draw a triangular ship
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = SHIP_SIZE / 20;
-    ctx.beginPath();
-    // 4/3 because the actual center of a triangle is about 1/3 below it
-    // negative represents 'upwards' on the screen
-    ctx.moveTo( // nose of the ship (tip)
-        ship.x + 4 / 3 * ship.r * Math.cos( ship.a ),
-        ship.y - 4 / 3 * ship.r * Math.sin( ship.a )
-    );
-    ctx.lineTo( // rear left of the ship
-        ship.x - ship.r * ( 2 / 3 * Math.cos( ship.a ) + Math.sin( ship.a ) ),
-        ship.y + ship.r * ( 2 / 3 * Math.sin( ship.a ) - Math.cos( ship.a ) )
-    );
-    ctx.lineTo( // rear right of the ship
-        ship.x - ship.r * ( 2 / 3 * Math.cos( ship.a ) - Math.sin( ship.a ) ),
-        ship.y + ship.r * ( 2 / 3 * Math.sin( ship.a ) + Math.cos( ship.a ) )
-    );
-    ctx.closePath();
-    ctx.stroke(); // draws a path
+    if(!exploding)
+    {
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = SHIP_SIZE / 20;
+        ctx.beginPath();
+        // 4/3 because the actual center of a triangle is about 1/3 below it
+        // negative represents 'upwards' on the screen
+        ctx.moveTo( // nose of the ship (tip)
+            ship.x + 4 / 3 * ship.r * Math.cos( ship.a ),
+            ship.y - 4 / 3 * ship.r * Math.sin( ship.a )
+        );
+        ctx.lineTo( // rear left of the ship
+            ship.x - ship.r * ( 2 / 3 * Math.cos( ship.a ) + Math.sin( ship.a ) ),
+            ship.y + ship.r * ( 2 / 3 * Math.sin( ship.a ) - Math.cos( ship.a ) )
+        );
+        ctx.lineTo( // rear right of the ship
+            ship.x - ship.r * ( 2 / 3 * Math.cos( ship.a ) - Math.sin( ship.a ) ),
+            ship.y + ship.r * ( 2 / 3 * Math.sin( ship.a ) + Math.cos( ship.a ) )
+        );
+        ctx.closePath();
+        ctx.stroke(); // draws a path
+    }
+    else
+    {
+        // draw the explosion
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc( ship.x, ship.y, ship.r * 1.5, 0, Math.PI * 2, false ); // circle
+        ctx.fill();
+        ctx.fillStyle = "orange";
+        ctx.beginPath();
+        ctx.arc( ship.x, ship.y, ship.r * 1.2, 0, Math.PI * 2, false ); // circle
+        ctx.fill();
+        ctx.fillStyle = "yellow";
+        ctx.beginPath();
+        ctx.arc( ship.x, ship.y, ship.r * 0.9, 0, Math.PI * 2, false ); // circle
+        ctx.fill();
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc( ship.x, ship.y, ship.r * 0.6, 0, Math.PI * 2, false ); // circle
+        ctx.fill();
+    }
+
+    // draw collision detection circle
+    if(SHOW_BOUNDING)
+    {
+        ctx.strokeStyle = "lime";
+        ctx.beginPath();
+        ctx.arc( ship.x, ship.y, ship.r, 0, Math.PI * 2, false ); // circle
+        ctx.stroke();
+    }
 
     // draw the asteroids
-    ctx.strokeStyle = "slategrey";
-    ctx.lineWidth = SHIP_SIZE / 20;
     var x, y, r, a, vert, offs;
 
     for (var i = 0; i < roids.length; i++)
     {
         // get the asteroid properties
+        ctx.strokeStyle = "slategrey";
+        ctx.lineWidth = SHIP_SIZE / 20;
         x = roids[i].x;
         y = roids[i].y;
         r = roids[i].r;
@@ -196,14 +246,14 @@ function update() {
         vert = roids[i].vert;
         offs = roids[i].offs;
 
-        // draw a path of the asteroid
+        // draw asteroid path
         ctx.beginPath();
         ctx.moveTo(
             x + r * offs[0] * Math.cos(a),
             y + r * offs[0] * Math.sin(a),
         );
 
-        // draw the polygon
+        // draw asteroid polygon
         for(var j = 1; j < vert; j++)
         {
             ctx.lineTo(
@@ -214,11 +264,64 @@ function update() {
         ctx.closePath();
         ctx.stroke();
 
-        // move the asteroid
+        // draw asteroid collision detection circle
+        if(SHOW_BOUNDING)
+        {
+            ctx.strokeStyle = "lime";
+            ctx.beginPath();
+            ctx.arc( x, y, r, 0, Math.PI * 2, false ); // circle
+            ctx.stroke();
+        }
+    }
+
+    // ship center dot
+    if(SHOW_CENTRE_DOT)
+    {
+        ctx.fillStyle = "red";
+        ctx.fillRect( ship.x - 1, ship.y - 1, 2, 2 );
+    }
+
+    // check for asteroid/ship collision
+    for (var i = 0; i < roids.length; i++)
+    {
+        if( distanceBetweenPoints( ship.x, ship.y, roids[i].x, roids[i].y ) < ship.r + roids[i].r )
+        {
+            explodeShip();
+        }
+    }
+
+    // rotate ship
+    ship.a += ship.rot;
+
+    // move ship
+    ship.x += ship.thrust.x;
+    ship.y += ship.thrust.y;
+
+    // handle ship edge of screen
+    if ( ship.x < 0 - ship.r )
+    {
+        ship.x = canv.width + ship.r;
+    }
+    else if ( ship.x > canv.width + ship.r )
+    {
+        ship.x = 0 - ship.r;
+    }
+    if ( ship.y < 0 - ship.r )
+    {
+        ship.y = canv.height + ship.r;
+    }
+    else if ( ship.y > canv.height + ship.r )
+    {
+        ship.y = 0 - ship.r;
+    }
+
+    // move the asteroid
+    for (var i = 0; i < roids.length; i++)
+    {
         roids[i].x += roids[i].xv;
         roids[i].y += roids[i].yv;
-
-        // handle edge of screen
+    
+        // handle asteroid edge of screen
         if(roids[i].x < 0 - roids[i].r)
         {
             roids[i].x = canv.width + roids[i].r;
@@ -237,34 +340,4 @@ function update() {
         }
     }
 
-
-    // rotate ship
-    ship.a += ship.rot;
-
-
-    // move the ship
-    ship.x += ship.thrust.x;
-    ship.y += ship.thrust.y;
-
-    // handle edge of screen
-    if ( ship.x < 0 - ship.r )
-    {
-        ship.x = canv.width + ship.r;
-    }
-    else if ( ship.x > canv.width + ship.r )
-    {
-        ship.x = 0 - ship.r;
-    }
-    if ( ship.y < 0 - ship.r )
-    {
-        ship.y = canv.height + ship.r;
-    }
-    else if ( ship.y > canv.height + ship.r )
-    {
-        ship.y = 0 - ship.r;
-    }
-
-    // center dot
-    ctx.fillStyle = "red";
-    ctx.fillRect( ship.x - 1, ship.y - 1, 2, 2 );
 }
