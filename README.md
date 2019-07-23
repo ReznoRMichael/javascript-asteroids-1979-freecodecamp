@@ -1,1 +1,1 @@
-# javascript-asteroids-1979-freecodecamp
+# JavaScript learning - Asteroids 1979 Game (freeCodeCamp tutorial)
