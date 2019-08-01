@@ -101,9 +101,9 @@ function distanceBetweenPoints(x1, y1, x2, y2)
 
 /* *********************************************************************************************** */
 
-function drawShip(x, y, a)
+function drawShip(x, y, a, color = "white")
 {
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = color;
     ctx.lineWidth = SHIP_SIZE / 20;
     ctx.beginPath();
     // 4/3 because the actual center of a triangle is about 1/3 below it
@@ -139,9 +139,24 @@ function explodeShip()
 
 /* *********************************************************************************************** */
 
+function gameOver()
+{
+    ship.dead = true;
+    text = "Game Over";
+    textAlpha = 1.0;
+}
+
+/* *********************************************************************************************** */
+
 function keyDown(/** @type {KeyboardEvent} */ ev )
 {
-    switch(ev.keyCode) {
+    if (ship.dead)
+    {
+        // don't do anything if the game is over
+        return;
+    }
+    switch(ev.keyCode)
+    {
         case 32: // spacebar (shoot laser)
             shootLaser();
             break;
@@ -164,7 +179,14 @@ function keyDown(/** @type {KeyboardEvent} */ ev )
 
 function keyUp(/** @type {KeyboardEvent} */ ev )
 {
-    switch(ev.keyCode) {
+    if (ship.dead)
+    {
+        // don't do anything if the game is over
+        return;
+    }
+
+    switch(ev.keyCode)
+    {
         case 32: // spacebar (allow shooting again)
             ship.canShoot = true;
             break;
@@ -246,6 +268,7 @@ function newShip()
         // how long the single blinking animation will last (s)
         blinkTime: Math.ceil( SHIP_BLINK_DURATION * FPS ),
         canShoot: true,
+        dead: false,
         lasers: [],
         explodeTime: 0,
         rot: 0, // ship rotation (start = no rotation)
@@ -294,7 +317,7 @@ function update()
     ctx.fillRect(0, 0, canv.width, canv.height);
 
     // thrust the ship
-    if (ship.thrusting)
+    if (ship.thrusting && !ship.dead)
     {
         // increase the ship acceleration by a constant value each time the Up arrow is pressed
         ship.thrust.x += SHIP_THRUST * Math.cos( ship.a ) / FPS;
@@ -330,8 +353,8 @@ function update()
         ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
     }
 
-    // draw a triangular ship
-    if (!exploding)
+    // draw a triangular ship 
+    if (!exploding && !ship.dead)
     {
         if (blinkOn)
         {
@@ -475,11 +498,18 @@ function update()
         ctx.fillText(text, canv.width / 2, canv.height * 0.75);
         textAlpha -= (1.0 / TEXT_FADE_TIME / FPS);
     }
+    else if (ship.dead)
+    {
+        newGame();
+    }
 
     // draw the amount of lives (represented by ship icons)
+    var lifeColor;
     for (var i=0; i < lives; i++)
     {
-        drawShip(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, 0.5 * Math.PI);
+        // set the color to red if the ship is exploding and to white if not
+        lifeColor = exploding && i == lives - 1 ? "red" : "white";
+        drawShip(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, 0.5 * Math.PI, lifeColor);
     }
 
     // detect laser hits on asteroids
@@ -513,8 +543,8 @@ function update()
     if (!exploding)
     {
         // invulnerability
-        // check for asteroid/ship collision if the ship is not blinking
-        if (ship.blinkNum == 0)
+        // check for asteroid/ship collision if the ship is not blinking and not game over
+        if (ship.blinkNum == 0 && !ship.dead)
         {
             for (var i = 0; i < roids.length; i++)
             {
@@ -538,13 +568,21 @@ function update()
     // else when the ship is exploding
     else
     {
-        // reduce the amount of time left to explosion
+        // reduce the amount of time left to the end of explosion
         ship.explodeTime--;
 
-        // create a new ship
+        // create a new ship and reset when the explosion is finished
         if (ship.explodeTime == 0)
         {
-            ship = newShip();
+            lives--; // one life lost
+            if (lives == 0)
+            {
+                gameOver();
+            }
+            else
+            {
+                ship = newShip();
+            }
         }
     }
 
