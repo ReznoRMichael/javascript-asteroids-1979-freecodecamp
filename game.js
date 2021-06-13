@@ -89,6 +89,9 @@ function destroyAsteroid(index) {
     /* Check High Score and update when beaten */
     if (score > scoreHigh) {
         scoreHigh = score;
+
+        /* save in local storage between sessions */
+        localStorage.setItem(SAVE_KEY_SCORE, scoreHigh);
     }
 
     // new level when no more asteroids
