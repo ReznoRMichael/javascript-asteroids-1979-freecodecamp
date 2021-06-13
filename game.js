@@ -138,7 +138,7 @@ function gameOver() {
 
 function keyDown( /** @type {KeyboardEvent} */ ev) {
     if (ship.dead) {
-        // don't do anything if the game is over
+        // don't allow the player to do anything if the game is over
         return;
     }
     switch (ev.keyCode) {
