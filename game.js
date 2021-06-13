@@ -36,7 +36,7 @@ var canv = document.getElementById("gameCanvas");
 var ctx = canv.getContext("2d");
 
 // set up the game parameters
-var level, roids, ship, text, textAlpha, lives;
+var level, roids, ship, text, textAlpha, lives, score;
 newGame();
 
 // set up event handlers (keyboard)
@@ -220,6 +220,7 @@ function newAsteroid(x, y, r) {
 
 function newGame() {
     level = 0;
+    score = 0;
     lives = GAME_LIVES;
     // set up the ship JavaScript object
     ship = newShip();
