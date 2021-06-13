@@ -485,6 +485,13 @@ function update() {
     ctx.font = TEXT_SIZE + "px dejavu sans mono";
     ctx.fillText(score, canv.width - SHIP_SIZE / 2, SHIP_SIZE);
 
+    /* draw the player's high score */
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.font = (TEXT_SIZE * 0.6) + "px dejavu sans mono";
+    ctx.fillText(scoreHigh, canv.width / 2, SHIP_SIZE);
+
     // detect laser hits on asteroids
     var ax, ay, ar, lx, ly;
     for (var i = roids.length - 1; i >= 0; i--) {
