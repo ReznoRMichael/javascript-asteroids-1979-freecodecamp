@@ -36,7 +36,7 @@ var canv = document.getElementById("gameCanvas");
 var ctx = canv.getContext("2d");
 
 // set up the game parameters
-var level, roids, ship, text, textAlpha, lives, score;
+var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
 newGame();
 
 // set up event handlers (keyboard)
@@ -84,6 +84,11 @@ function destroyAsteroid(index) {
 
     // destroy the asteroid
     roids.splice(index, 1);
+
+    /* Check High Score and update when beaten */
+    if (score > scoreHigh) {
+        scoreHigh = score;
+    }
 
     // new level when no more asteroids
     if (roids.length == 0) {
@@ -226,6 +231,7 @@ function newAsteroid(x, y, r) {
 function newGame() {
     level = 0;
     score = 0;
+    scoreHigh = 110;
     lives = GAME_LIVES;
     // set up the ship JavaScript object
     ship = newShip();
