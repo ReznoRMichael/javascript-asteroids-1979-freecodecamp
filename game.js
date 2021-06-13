@@ -36,6 +36,9 @@ const TEXT_SIZE = 40; // text font size (height) in pixels
 var canv = document.getElementById("gameCanvas");
 var ctx = canv.getContext("2d");
 
+/* set up sound effects */
+var fxLaser = new Audio("sounds/laser.m4a");
+
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
 newGame();
