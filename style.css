@@ -1,5 +1,33 @@
 body {
-  background-color: #050d19;
+
   margin: 0;
   overflow: auto;
+}
+
+#background {
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*
+  background-image: url("../img/hk-background.jpg");
+  background-size: auto 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  */
+  background-color: #050d19;
+  z-index: 1;
+}
+
+#content {
+  max-width: 760px;
+  max-height: 570px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  z-index: 1000;
 }
