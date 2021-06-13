@@ -91,6 +91,9 @@ function destroyAsteroid(index) {
     // destroy the asteroid
     roids.splice(index, 1);
 
+    /* play the sound when hit */
+    fxHit.play(); 
+
     /* Check High Score and update when beaten */
     if (score > scoreHigh) {
         scoreHigh = score;
