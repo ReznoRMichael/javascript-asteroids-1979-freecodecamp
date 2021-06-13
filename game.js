@@ -354,6 +354,9 @@ function update() {
         ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
         ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
 
+        /* play the sound */
+        fxThrust.play();
+
         // draw the thruster flames if the ship is not exploding and not blinking
         if (!exploding && blinkOn) {
             ctx.fillStyle = "red";
@@ -379,6 +382,9 @@ function update() {
     } else {
         ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
         ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
+
+        /* stop playing the sound */
+        fxThrust.stop();
     }
 
     // draw a triangular ship 
