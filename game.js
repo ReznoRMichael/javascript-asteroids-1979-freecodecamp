@@ -37,7 +37,7 @@ var canv = document.getElementById("gameCanvas");
 var ctx = canv.getContext("2d");
 
 /* set up sound effects */
-var fxLaser = new Sound("sounds/laser.m4a");
+var fxLaser = new Sound("sounds/laser.m4a", 5, 0.5);
 
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
