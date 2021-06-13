@@ -13,6 +13,7 @@ const ROIDS_JAG = 0.3; // jaggedness of the asteroids (0 = none, 1 = lots)
 const ROIDS_LARGE_POINTS = 20; // amount of points awarded for destroying a large asteroid
 const ROIDS_MEDIUM_POINTS = 50; // amount of points awarded for destroying a medium asteroid
 const ROIDS_SMALL_POINTS = 100; // amount of points awarded for destroying a small asteroid
+const SAVE_KEY_SCORE = "HighScore"; /* save a key for local storage (High Score) */
 const ROIDS_NUM = 1; // starting number of asteroids
 const ROIDS_SIZE = 100; // starting size of asteroids in pixels
 const ROIDS_SPEED = 50; // max starting speed of asteroids in pixels per second
@@ -231,10 +232,18 @@ function newAsteroid(x, y, r) {
 function newGame() {
     level = 0;
     score = 0;
-    scoreHigh = 110;
     lives = GAME_LIVES;
     // set up the ship JavaScript object
     ship = newShip();
+
+    /* get the high score from local storage */
+    var scoreString = localStorage.getItem(SAVE_KEY_SCORE);
+    if (scoreString == null) {
+        scoreHigh = 0;
+    } else {
+        scoreHigh = parseInt(scoreString);
+    }
+
     newLevel();
 }
 
