@@ -24,10 +24,14 @@ body {
 }
 
 #content {
-  max-width: 760px;
-  max-height: 570px;
   margin: 0 auto;
   padding: 0;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 760px;
+  height: 570px;
+  margin-left: -380px;
+  margin-top: -285px;
   z-index: 1000;
 }
