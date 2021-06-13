@@ -77,9 +77,9 @@ function destroyAsteroid(index) {
     } else if (r == Math.ceil(ROIDS_SIZE / 4)) {
         roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 8)));
         roids.push(newAsteroid(x, y, Math.ceil(ROIDS_SIZE / 8)));
-        score =+ ROIDS_MEDIUM_POINTS;
+        score += ROIDS_MEDIUM_POINTS;
     } else {
-        score =+ ROIDS_SMALL_POINTS;
+        score += ROIDS_SMALL_POINTS;
     }
 
     // destroy the asteroid
