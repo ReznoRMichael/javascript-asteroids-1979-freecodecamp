@@ -472,6 +472,13 @@ function update() {
         drawShip(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, 0.5 * Math.PI, lifeColor);
     }
 
+    /* draw the player's score */
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.font = TEXT_SIZE + "px dejavu sans mono";
+    ctx.fillText(score, canv.width - SHIP_SIZE / 2, SHIP_SIZE);
+
     // detect laser hits on asteroids
     var ax, ay, ar, lx, ly;
     for (var i = roids.length - 1; i >= 0; i--) {
