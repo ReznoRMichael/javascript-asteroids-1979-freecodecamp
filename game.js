@@ -39,13 +39,13 @@ var canv = document.getElementById("gameCanvas");
 var ctx = canv.getContext("2d");
 
 /* set up sound effects */
-var fxLaser = new Sound("sounds/laser.m4a", 5, 0.5);
-var fxExplode = new Sound("sounds/explode.m4a", 2, 0.5);
-var fxHit = new Sound("sounds/hit.m4a", 5, 0.4);
-var fxThrust = new Sound("sounds/thrust.m4a", 1, 0.3);
+var fxLaser = new Sound("sounds/laser.m4a", 5, 0.1);
+var fxExplode = new Sound("sounds/explode.m4a", 2, 0.25);
+var fxHit = new Sound("sounds/hit.m4a", 5, 0.2);
+var fxThrust = new Sound("sounds/thrust.m4a", 1, 0.1);
 
 /* set up the music */
-var music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a", 0.2);
+var music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a", 0.05);
 var roidsLeft, roidsTotal;
 
 // set up the game parameters
@@ -173,7 +173,6 @@ function gameOver() {
     ship.dead = true;
     text = "Game Over";
     textAlpha = 1.0;
-
     music.tempo = 1.0;
 }
 
@@ -384,7 +383,7 @@ function Music(srcLow, srcHigh, vol = 1.0) {
     this.tick = function() {
         if (this.beatTime == 0) {
             this.play();
-            this.beatTime = Math.ceil(this.tempo * FPS);
+            this.beatTime = Math.ceil(this.tempo * 2 * FPS);
         } else {
             this.beatTime--;
         }
