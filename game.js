@@ -24,7 +24,7 @@ const TURN_SPEED_RAD = TURN_SPEED / 180 * Math.PI / FPS; // turn speed converted
 const SHOW_BOUNDING = false; // show the collision detection bounding
 const SHOW_CENTRE_DOT = false; // show the red dot in the center of the ship
 const TEXT_FADE_TIME = 2.5; // text fade time in seconds
-const TEXT_SIZE = 40; // text font size in pixels
+const TEXT_SIZE = 40; // text font size (height) in pixels
 
 /* *********************************************************************************************** */
 
