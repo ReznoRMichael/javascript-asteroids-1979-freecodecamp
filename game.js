@@ -139,6 +139,7 @@ function drawShip(x, y, a, color = "white") {
 
 function explodeShip() {
     ship.explodeTime = Math.ceil(SHIP_EXPLODE_DURATION * FPS);
+    fxExplode.play();
     // ctx.fillStyle = "lime";
     // ctx.strokeStyle = "lime";
     // ctx.beginPath();
