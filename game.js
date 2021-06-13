@@ -10,6 +10,9 @@ const LASER_SPEED = 500; // speed of lasers (pixels / s)
 const LASER_DISTANCE = 0.4; // max distance the laser can travel as fraction of screen width
 const LASER_EXPLODE_DURATION = 0.1; // duration of the laser's explosion in sec
 const ROIDS_JAG = 0.3; // jaggedness of the asteroids (0 = none, 1 = lots)
+const ROIDS_LARGE_POINTS = 20; // amount of points awarded for destroying a large asteroid
+const ROIDS_MEDIUM_POINTS = 50; // amount of points awarded for destroying a medium asteroid
+const ROIDS_SMALL_POINTS = 100; // amount of points awarded for destroying a small asteroid
 const ROIDS_NUM = 1; // starting number of asteroids
 const ROIDS_SIZE = 100; // starting size of asteroids in pixels
 const ROIDS_SPEED = 50; // max starting speed of asteroids in pixels per second
