@@ -45,7 +45,8 @@ var fxHit = new Sound("sounds/hit.m4a", 5, 0.4);
 var fxThrust = new Sound("sounds/thrust.m4a", 1, 0.3);
 
 /* set up the music */
-var music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a");
+var music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a", 0.2);
+var roidsLeft, roidsTotal;
 
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
@@ -345,20 +346,24 @@ function Sound(src, maxStreams = 1, vol = 1.0) {
     }
 }
 
-function Music(srcLow, srcHigh) {
+function Music(srcLow, srcHigh, vol = 1.0) {
     this.soundLow = new Audio(srcLow);
+    this.soundLow.volume = vol;
     this.soundHigh = new Audio(srcHigh);
+    this.soundHigh.volume = vol;
     this.low = true;
     this.tempo = 1.0; /* seconds per beat */
     this.beatTime = 0; /* frames left until next beat */
 
     this.play = function() {
-        if (this.low) {
-            this.soundLow.play();
-        } else {
-            this.soundHigh.play();
+        if (MUSIC_ON) {
+            if (this.low) {
+                this.soundLow.play();
+            } else {
+                this.soundHigh.play();
+            }
+            this.low = !this.low;
         }
-        this.low = !this.low;
     }
 
     this.tick = function() {
