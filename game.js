@@ -37,7 +37,7 @@ var canv = document.getElementById("gameCanvas");
 var ctx = canv.getContext("2d");
 
 /* set up sound effects */
-var fxLaser = new Audio("sounds/laser.m4a");
+var fxLaser = new Sound("sounds/laser.m4a");
 
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
@@ -307,6 +307,23 @@ function shootLaser() {
 
     // prevent further shooting
     ship.canShoot = false;
+}
+
+/* *********************************************************************************************** */
+
+function Sound(src, maxStreams = 1, vol = 1.0) {
+    this.streamNum = 0;
+    this.streams = [];
+
+    for (var i = 0; i < maxStreams; i++) {
+        this.streams.push(new Audio(src));
+        this.streams[i].volume = vol;
+    }
+
+    this.play = function() {
+        this.streamNum = (this.streamNum + 1) % maxStreams;
+        this.streams[this.streamNum].play();
+    }
 }
 
 /* *********************************************************************************************** */
