@@ -41,6 +41,7 @@ var ctx = canv.getContext("2d");
 var fxLaser = new Sound("sounds/laser.m4a", 5, 0.5);
 var fxExplode = new Sound("sounds/explode.m4a", 2, 0.5);
 var fxHit = new Sound("sounds/hit.m4a", 5, 0.4);
+var fxThrust = new Sound("sounds/thrust.m4a", 2, 0.5);
 
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
