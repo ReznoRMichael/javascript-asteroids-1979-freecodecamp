@@ -374,6 +374,11 @@ function Music(srcLow, srcHigh, vol = 1.0) {
         }
     }
 
+    /* adjusts the tempo of the music according to number of asteroids left on screen */
+    this.setAsteroidRatio = function(ratio) {
+        this.tempo = 1.0 - 0.75 * (1.0 - ratio);
+    }
+
     this.tick = function() {
         if (this.beatTime == 0) {
             this.play();
