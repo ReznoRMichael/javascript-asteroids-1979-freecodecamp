@@ -27,7 +27,8 @@ const TURN_SPEED = 360; // turn speed in degrees per second
 const TURN_SPEED_RAD = TURN_SPEED / 180 * Math.PI / FPS; // turn speed converted to radians per second
 const SHOW_BOUNDING = false; // show the collision detection bounding
 const SHOW_CENTRE_DOT = false; // show the red dot in the center of the ship
-const SOUND_ON = false;
+const SOUND_ON = true;
+const MUSIC_ON = true;
 const TEXT_FADE_TIME = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; // text font size (height) in pixels
 
@@ -44,7 +45,7 @@ var fxHit = new Sound("sounds/hit.m4a", 5, 0.4);
 var fxThrust = new Sound("sounds/thrust.m4a", 1, 0.3);
 
 /* set up the music */
-var music = new Music("sounds/music-low.m4a", "sounds/music-low.m4a");
+var music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a");
 
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
@@ -377,6 +378,9 @@ function Music(srcLow, srcHigh) {
 function update() {
     var exploding = ship.explodeTime > 0;
     var blinkOn = ship.blinkNum % 2 == 0;
+
+    /* tick the music */
+    music.tick();
 
     // draw background (space)
     ctx.fillStyle = "black";
