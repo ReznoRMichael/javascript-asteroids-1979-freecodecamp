@@ -27,7 +27,7 @@ const TURN_SPEED = 360; // turn speed in degrees per second
 const TURN_SPEED_RAD = TURN_SPEED / 180 * Math.PI / FPS; // turn speed converted to radians per second
 const SHOW_BOUNDING = false; // show the collision detection bounding
 const SHOW_CENTRE_DOT = false; // show the red dot in the center of the ship
-const SOUND_ON = false;
+const SOUND_ON = true;
 const TEXT_FADE_TIME = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; // text font size (height) in pixels
 
@@ -41,7 +41,7 @@ var ctx = canv.getContext("2d");
 var fxLaser = new Sound("sounds/laser.m4a", 5, 0.5);
 var fxExplode = new Sound("sounds/explode.m4a", 2, 0.5);
 var fxHit = new Sound("sounds/hit.m4a", 5, 0.4);
-var fxThrust = new Sound("sounds/thrust.m4a", 2, 0.5);
+var fxThrust = new Sound("sounds/thrust.m4a", 1, 0.3);
 
 // set up the game parameters
 var level, roids, ship, text, textAlpha, lives, score, scoreHigh;
@@ -333,6 +333,11 @@ function Sound(src, maxStreams = 1, vol = 1.0) {
             this.streamNum = (this.streamNum + 1) % maxStreams;
             this.streams[this.streamNum].play();
         }
+    }
+
+    this.stop = function() {
+        this.streams[this.streamNum].pause();
+        this.streams[this.streamNum].currentTime = 0;
     }
 }
 
