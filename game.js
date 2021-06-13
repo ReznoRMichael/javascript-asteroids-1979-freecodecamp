@@ -27,6 +27,7 @@ const TURN_SPEED = 360; // turn speed in degrees per second
 const TURN_SPEED_RAD = TURN_SPEED / 180 * Math.PI / FPS; // turn speed converted to radians per second
 const SHOW_BOUNDING = false; // show the collision detection bounding
 const SHOW_CENTRE_DOT = false; // show the red dot in the center of the ship
+const SOUND_ON = false;
 const TEXT_FADE_TIME = 2.5; // text fade time in seconds
 const TEXT_SIZE = 40; // text font size (height) in pixels
 
@@ -327,8 +328,10 @@ function Sound(src, maxStreams = 1, vol = 1.0) {
     }
 
     this.play = function() {
-        this.streamNum = (this.streamNum + 1) % maxStreams;
-        this.streams[this.streamNum].play();
+        if (SOUND_ON) {
+            this.streamNum = (this.streamNum + 1) % maxStreams;
+            this.streams[this.streamNum].play();
+        }
     }
 }
 
