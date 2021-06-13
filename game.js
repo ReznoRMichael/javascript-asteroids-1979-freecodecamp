@@ -302,6 +302,7 @@ function shootLaser() {
             dist: 0,
             explodeTime: 0
         });
+        fxLaser.play();
     }
 
     // prevent further shooting
