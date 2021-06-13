@@ -105,6 +105,10 @@ function destroyAsteroid(index) {
     /* play the sound when hit */
     fxHit.play(); 
 
+    /* calculate the ratio of remaining asteroids to determine music tempo */
+    roidsLeft--;
+    music.setAsteroidRatio(roidsLeft == 0 ? 1 : roidsLeft / roidsTotal);
+
     /* Check High Score and update when beaten */
     if (score > scoreHigh) {
         scoreHigh = score;
